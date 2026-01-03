@@ -64,7 +64,7 @@ weather-agent/
 ├── main.py        # Agent loop and Pydantic models
 ├── tools.py       # Tool implementations (get_weather)
 ├── pyproject.toml # Dependencies
-└── .env           # API keys (not committed)
+└── .env           # API keys
 ```
 
 ## Adding New Tools
