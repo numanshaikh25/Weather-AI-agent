@@ -14,7 +14,6 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-# Pydantic models for structured outputs
 class StepType(str, Enum):
     START = "START"
     PLAN = "PLAN"
@@ -49,7 +48,7 @@ class AgentResponse(BaseModel):
     tool: str | None = None
     input: str | None = None
 
-# Available tools mapping
+
 available_tools = {
     "get_weather": get_weather,
 }
@@ -127,20 +126,22 @@ def run_agent(user_query: str) -> str:
             tool_input = parsed_result.input
             print(f"🔧 Calling: {tool_to_call}({tool_input})")
 
-            # Execute the tool
             tool_response = available_tools[tool_to_call](tool_input)
             print(f"🔧 Result: {tool_response}")
 
-            # Add OBSERVE message to history
-            message_history.append({
-                "role": "user",
-                "content": json.dumps({
-                    "step": "OBSERVE",
-                    "tool": tool_to_call,
-                    "input": tool_input,
-                    "output": tool_response
-                })
-            })
+            message_history.append(
+                {
+                    "role": "user",
+                    "content": json.dumps(
+                        {
+                            "step": "OBSERVE",
+                            "tool": tool_to_call,
+                            "input": tool_input,
+                            "output": tool_response,
+                        }
+                    ),
+                }
+            )
             continue
 
         if parsed_result.step == StepType.OUTPUT:
